@@ -1,0 +1,32 @@
+{
+    "description": "부동산 허위매물 예측 최종 모델 설정",
+    "used_features": [
+        "관리비_log",
+        "보증금(억)_log",
+        "월세(만)",
+        "총층_boxcox",
+        "해당층_boxcox",
+        "해당층_결측여부",
+        "주차가능여부",
+        "방향선호도",
+        "중개사무소_빈도기반",
+        "년월",
+        "총주차대수_filled_boxcox",
+        "전용면적_raw",
+        "전용면적_결측여부"
+    ],
+    "imbalance_handling": "Isolation Forest",
+    "model": "LightGBM",
+    "hyperparameters": {
+        "learning_rate": 0.08616228991870131,
+        "max_depth": 5,
+        "num_leaves": 80,
+        "min_child_samples": 59,
+        "subsample": 0.9572413226161487,
+        "colsample_bytree": 0.8355312906443829,
+        "n_estimators": 100,
+        "random_state": 42
+    },
+    "threshold": 0.45,
+    "validation": "Repeated Hold-out Validation (5회 평균 기준)"
+}
