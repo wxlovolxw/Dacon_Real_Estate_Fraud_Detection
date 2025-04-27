@@ -18,9 +18,9 @@ EDA, 피처 엔지니어링, 모델링, 해석까지 실무 흐름에 맞춰 전
 
 ## 분석 개요
 ---
-- 목표: 부동산 매물 데이터에서 허위매물 여부 예측
+- 목표: 부동산 매물 데이터에서 **허위매물 여부 예측**
 - 데이터셋: Dacon 제공 부동산 매물 데이터
-- 타겟 변수: `허위매물여부`
+- 타겟 변수: **`허위매물여부`**
 - 성능 지표: F1 Score, Precision, Recall
 - 최종 모델: LightGBM (Threshold 0.45 적용)
 
@@ -81,6 +81,7 @@ EDA, 피처 엔지니어링, 모델링, 해석까지 실무 흐름에 맞춰 전
 - 방향선호도 + 중개사무소_빈도기반 + 년월 조합
 - 전용면적_raw + 전용면적_결측여부
 - 총주차대수_filled_boxcox
+
 ---
 
 ## 클래스 불균형 처리
@@ -112,12 +113,22 @@ EDA, 피처 엔지니어링, 모델링, 해석까지 실무 흐름에 맞춰 전
 
 ## 모델 해석
 ---
-- SHAP 기반 피처 중요도 분석 수행
-- 주요 관찰:
+- SHAP 기반 피처 중요도 분석 수행:
   - '년월', '중개사무소_빈도기반', '관리비_log', '보증금(억)_log' 등의 변수가 높은 영향력
 - 피처 제거 실험은 진행했으나,  
-  최종 모델에서는 **결측 여부 파생 피처를 포함하여 학습**  
-- 해석 가능성과 성능 균형을 고려해 최종 피처셋을 유지
+  최종 모델에서는 **결측 여부 파생 피처를 포함하여 학습**
+- 추가로, SHAP Summary Scatter Plot을 통해  
+  피처별 값 변화가 예측 결과에 미치는 구체적 기여 방향까지 함께 분석하였습니다.
+
+### SHAP Feature Importance (Top 10)
+![SHAP Feature Importance](images/shap_top10_features_tuned_lgbm.png)
+
+> 주요 피처들의 평균적인 중요도(Mean Absolute SHAP Value)를 기준으로 정렬한 결과
+
+### SHAP Summary Plot
+![SHAP Summary Plot](images/final_model_shap_summary_scatter.png)
+
+> 주요 피처 값 변화가 개별 예측 결과에 미치는 영향을 시각화
 
 ---
 
@@ -127,6 +138,30 @@ EDA, 피처 엔지니어링, 모델링, 해석까지 실무 흐름에 맞춰 전
 - 최종 선택:
   - Threshold = 0.45 (Precision-Recall 균형 최적화)
 
+### Threshold별 Score 변화
+![Threshold Fine Tuning](images/threshold_fine_tuning.png)
+
+> Threshold 값 변화에 따른 F1, Precision, Recall 변화를 시각화하여 최적 지점을 탐색
+
+### Precision-Recall Curve
+![Precision Recall Curve](images/precision_recall_curve_045.png)
+
+> Threshold=0.45 설정이 Precision-Recall 트레이드오프 상 합리적인 선택임을 확인
+
+---
+
+## 최종 모델 성능
+---
+- F1 Score: 0.8519
+- Precision: 0.8846
+- Recall: 0.8214
+- Accuracy: 0.9680
+- ROC-AUC: 0.9839
+
+### Confusion Matrix
+![Confusion Matrix](images/final_model_confusion_matrix.png)
+
+> 정상 매물과 허위 매물에 대한 분류 성능을 시각화
 
 ---
 
